@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_pro/blocs/cart/cart_bloc.dart';
+import 'package:flutter_application_pro/blocs/cart/cart_event.dart';
+import 'package:flutter_application_pro/blocs/cart/cart_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../models/product_model.dart';
 //import 'package:flutter_bloc/flutter_bloc.dart';
@@ -162,6 +166,30 @@ class ProductCard extends StatelessWidget {
                           )
                         ]),
                   ),
+                  BlocBuilder<CartBloc, CartState>(builder: (context, state) {
+                    if (state is CartLoading) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (state is CartLoaded) {
+                      return Expanded(
+                          child: IconButton(
+                        icon: Icon(
+                          Icons.add_circle,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          context
+                              .read<CartBloc>()
+                              .add(CartProductAdded(product));
+                          Navigator.pushNamed(context, '/cart');
+                        },
+                      ));
+                    } else {
+                      return Text("someting went wrong");
+                    }
+                  }),
                   Expanded(
                       child: IconButton(
                     icon: Icon(

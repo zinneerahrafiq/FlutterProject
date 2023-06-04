@@ -1,12 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_pro/blocs/cart/cart_state.dart';
+import 'package:flutter_application_pro/blocs/product/product_bloc.dart';
 import 'package:flutter_application_pro/models/category_model.dart';
 import 'package:flutter_application_pro/models/product_model.dart';
+import 'package:flutter_application_pro/screens/product.dart';
 import 'package:flutter_application_pro/widgets/herocarouselcard.dart';
 import 'package:flutter_application_pro/widgets/navbar.dart';
 import 'package:flutter_application_pro/widgets/appbar.dart';
 import 'package:flutter_application_pro/widgets/section_title.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../blocs/cart/cart_bloc.dart';
+import '../blocs/category/category_bloc.dart';
 import '../widgets/product_card.dart';
 import '../widgets/product_carousel.dart';
 
@@ -35,21 +41,68 @@ class HomeScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Container(
-                  child: CarouselSlider(
-                options: CarouselOptions(
-                  aspectRatio: 2,
-                  viewportFraction: 0.9,
-                  enlargeCenterPage: true,
-                  enableInfiniteScroll: false,
-                ),
-                items: Category.categories
-                    .map((category) => HeroCarouselCard(category: category))
-                    .toList(),
-              )),
+              BlocBuilder<CategoryBloc, CategoryState>(
+                  builder: (context, state) {
+                if (state is CategoryLoading) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (state is CategoryLoaded) {
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      aspectRatio: 2,
+                      viewportFraction: 0.9,
+                      enlargeCenterPage: true,
+                      enableInfiniteScroll: false,
+                    ),
+                    items: state.categories
+                        .map((category) => HeroCarouselCard(category: category))
+                        .toList(),
+                  );
+                } else {
+                  return Text("something went wrong");
+                }
+              }),
+
               SectionTitle(title: "recommended"),
               //ProductCard(product: Product.products[0]),
-              ProductCarousel(products: Product.products)
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is ProductLoaded) {
+                    return ProductCarousel(
+                        products: state.products
+                            .where((product) => product.isRecommended)
+                            .toList());
+                  } else {
+                    return Text("something went wrong");
+                  }
+                },
+              ),
+
+              SectionTitle(title: "most popular"),
+              BlocBuilder<ProductBloc, ProductState>(
+                builder: (context, state) {
+                  if (state is ProductLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (state is ProductLoaded) {
+                    return ProductCarousel(
+                        products: state.products
+                            .where((product) => product.isPopular)
+                            .toList());
+                  } else {
+                    return Text("something went wrong");
+                  }
+                },
+              ),
             ],
           ),
         ));

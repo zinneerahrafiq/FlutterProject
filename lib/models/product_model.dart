@@ -1,4 +1,5 @@
 //import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 //import 'package:hive/hive.dart';
 
@@ -7,7 +8,7 @@ import 'package:equatable/equatable.dart';
 //@HiveType(typeId: 0)
 class Product extends Equatable {
   //@HiveField(0)
-  final String id;
+
   //@HiveField(1)
   final String name;
   //@HiveField(2)
@@ -24,7 +25,6 @@ class Product extends Equatable {
   //final String? description;
 
   const Product({
-    required this.id,
     required this.name,
     required this.category,
     required this.imageUrl,
@@ -33,6 +33,17 @@ class Product extends Equatable {
     required this.isPopular,
     //this.description,
   });
+
+  static Product fromSnapshot(DocumentSnapshot snap) {
+    Product product = Product(
+        name: snap['name'],
+        category: snap['category'],
+        imageUrl: snap['imageUrl'],
+        price: snap['price'],
+        isRecommended: snap['isRecommended'],
+        isPopular: snap['isPopular']);
+    return product;
+  }
 
   // static Product fromSnapshot(DocumentSnapshot snap) {
   //   Product product = Product(
@@ -50,7 +61,6 @@ class Product extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
         name,
         category,
         imageUrl,
@@ -62,7 +72,6 @@ class Product extends Equatable {
 
   static List<Product> products = [
     Product(
-      id: '1',
       name: 'Soft Drink #1',
       category: 'Soft Drinks',
       imageUrl:
@@ -72,7 +81,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '2',
       name: 'Soft Drink #2',
       category: 'Soft Drinks',
       imageUrl:
@@ -82,7 +90,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '3',
       name: 'Soft Drink #3',
       category: 'Soft Drinks',
       imageUrl:
@@ -92,7 +99,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '4',
       name: 'Smoothies #1',
       category: 'Smoothies',
       imageUrl:
@@ -102,7 +108,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '5',
       name: 'Smoothies #2',
       category: 'Smoothies',
       imageUrl:
@@ -112,7 +117,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '6',
       name: 'Soft Drink #1',
       category: 'Soft Drinks',
       imageUrl:
@@ -122,7 +126,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '7',
       name: 'Soft Drink #2',
       category: 'Soft Drinks',
       imageUrl:
@@ -132,7 +135,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '8',
       name: 'Soft Drink #3',
       category: 'Soft Drinks',
       imageUrl:
@@ -142,7 +144,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '9',
       name: 'Smoothies #1',
       category: 'Smoothies',
       imageUrl:
@@ -152,7 +153,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '10',
       name: 'Smoothies #2',
       category: 'Smoothies',
       imageUrl:
@@ -162,7 +162,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '11',
       name: 'Soft Drink #1',
       category: 'Soft Drinks',
       imageUrl:
@@ -172,7 +171,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '12',
       name: 'Soft Drink #2',
       category: 'Soft Drinks',
       imageUrl:
@@ -182,7 +180,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '13',
       name: 'Soft Drink #3',
       category: 'Soft Drinks',
       imageUrl:
@@ -192,7 +189,6 @@ class Product extends Equatable {
       isPopular: true,
     ),
     Product(
-      id: '14',
       name: 'Smoothies #2',
       category: 'Smoothies',
       imageUrl:
@@ -202,7 +198,6 @@ class Product extends Equatable {
       isPopular: false,
     ),
     Product(
-      id: '20',
       name: 'Smoothies strawberry',
       category: 'Smoothies',
       imageUrl:
